@@ -1,0 +1,114 @@
+.dashboard_container{
+    width: 100%;
+    min-height: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.title{
+    text-align: center;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 4rem;
+    padding: 10px;
+    font-weight: bolder;
+}
+
+/* LEFT SIDE */
+.dashboard_left_cont{
+    min-width: 70%;
+    width: fit-content;
+    min-height: 100vh;
+    height: fit-content;
+    padding: 10px;
+}
+.left_upper{
+    width: 100%;
+    min-height: 15rem;
+    height: fit-content;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.apointments{
+    min-height: 25rem;
+    height: fit-content;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 5rem;
+    padding: 10px;
+}
+.apointment{
+    min-height: 15rem;
+    min-width: 28%;
+    width: fit-content;
+    height: fit-content;
+    background-color:white;
+    margin: auto;
+    margin-top: 5px;
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    padding: 10px;
+}
+.apointment h4{
+    margin-top: 6px;
+}
+.apointment p{
+    font-size: 20px;
+}
+.apointment form{
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:2rem
+}
+.apointment form button{
+    width: 40%;
+}
+
+.left_lower{
+    width: 100%;
+    height: fit-content;
+    padding: 10px;
+    margin-top: 1rem;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.message_form_cont{
+    margin: 1rem 0 0 0;
+}
+.message_form_cont form button {
+    width: 100%;
+    margin-top: 20px;
+}
+
+
+
+.dashboard_right_cont{
+    min-width: 30%;
+    width: fit-content;
+    min-height: 100vh;
+    height: fit-content;
+    padding: 10px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.meeting_container{
+    width: 100%;
+    height: 100vh;
+    overflow: auto;
+}
+.meeting{
+    min-height: 10rem;
+    height: fit-content;
+    margin: auto;
+    padding: 15px;
+    margin-top: 1rem;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 5px;
+}
+

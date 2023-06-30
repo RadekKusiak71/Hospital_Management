@@ -1,0 +1,72 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %} Dashboard {% endblock %}
+{% block css %} <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" >{% endblock %}
+{% block content %}
+<div class="dashboard_container">
+    <div class="dashboard_left_cont">
+        <div class="left_upper">
+            <div class="title">
+                <h1 style="font-weight: bolder;">Closest Appointments</h1>
+            </div>
+            <hr>
+            <div class="apointments">
+                {% for apointment in apointments %}
+                <div class="apointment">
+                    <h3>Patient ID: {{apointment.patient.id}}</h3>
+                    <hr>
+                    <h4>Patient Full Name:</h4>
+                    <div class="patient"><p>{{apointment.patient.firstname}} {{apointment.patient.lastname}}</p></div>
+                    <h4>Room: {{apointment.room}}</h4>
+                    <h4 style="margin-top:1rem;">Apointment Date:</h4>
+                    <div class="date"><p>{{apointment.date}}</p></div>
+                    <h4>Apointment Status:</h4>
+                    <div class="status">{% if apointment.status%} <p>Confirmed</p> {% else %} <p>Unconfirmed</p> {% endif %}</div>
+                    <div class="buttons">
+                        <!-- CONNECT TO BACKEND -->
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success" name="confirm" id="confirm" value="{{apointment.id}}">Confirm</button>
+                            <button type="submit" class="btn btn-danger" name="delete" id=delete value="{{apointment.id}}">Delete</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="left_lower">
+            <div class="title">
+                <h1 style="font-weight: bolder;">Send a message</h1>
+            </div>
+            <hr>
+            <div class="message_form_cont">
+                <!-- CONNECT TO BACKEND -->
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    {{message_form}}
+                    <button class="btn btn-secondary" id="msg_form" name="msg_form">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="dashboard_right_cont">
+        <div class="title">
+            <h1 style="font-weight: bolder;">Your meetings</h1>
+        </div>
+        <hr>
+        <div class="meeting_container">
+            {% for meeting in meetings %}
+            <div class="meeting">
+                <h3>{{meeting.title}}</h3>
+                <hr>
+                <h4>Date</h4>
+                <p>{{meeting.date}}</p>
+                <h4>Created by</h4>
+                <p>{{meeting.created_by.firstname}} {{meeting.created_by.lastname}}</p>
+                <h4>Room: {{meeting.room.number}}</h4>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
