@@ -32,10 +32,12 @@
                     <h4>Apointment Status:</h4>
                     <div class="status">{% if apointment.status%} <p>Confirmed</p> {% else %} <p>Unconfirmed</p> {% endif %}</div>
                     <div class="buttons">
+                        {% if apointment.status == False %}
                         <form action="" method="POST">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger" name="delete" id=delete value="{{apointment.id}}">Delete</button>
                         </form>
+                        {% endif %}
                     </div>
                 </div>
         <hr>
