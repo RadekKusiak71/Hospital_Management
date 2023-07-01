@@ -56,46 +56,12 @@ class AppointmentsPage(View):
 
     def get(self, request):
         day = datetime.date.today()
-        calendar = self.get_calendar(AppointmentsPage.today)
-        days = self.get_days(calendar)
         appointments = self.get_user_appointments()
 
-        if 'next' in request.GET:
-            AppointmentsPage.today += timedelta(days=31)
-            calendar = self.get_month(AppointmentsPage.today)
-            days = self.get_days(calendar)
-            return redirect('appointments_page')
-        
-        elif 'last' in request.GET:
-            if AppointmentsPage.today < datetime.date.today():
-                calendar = self.get_month(AppointmentsPage.today)
-                return redirect('appointments_page')
-            else:
-                AppointmentsPage.today -= timedelta(days=31)
-                calendar = self.get_month(AppointmentsPage.today)
-                days = self.get_days(calendar)
-                return redirect('appointments_page')
             
-        elif 'start_day' in request.GET:
-                AppointmentsPage.today = datetime.date.today()
-                calendar = self.get_month(AppointmentsPage.today)
-                days = self.get_days(calendar)
-                return redirect('appointments_page')
-            
-        context = {'calendar': calendar, 'days': days,'today_date':day,'appointments':appointments}
+        context = {'today_date':day,'appointments':appointments}
         return render(request, 'patient_page/appointments.html', context)
-
-    def get_calendar(self,today):
-        cal = calendar.Calendar()
-        month_calendar = list(cal.monthdatescalendar(today.year,today.month))
-        return month_calendar
     
-    def get_days(self,month_calendar):
-        days_list = []
-        for week in month_calendar:
-            for date in week:
-                days_list.append(date)
-        return days_list
     
     def get_month(self,today):
         cal = calendar.Calendar()
