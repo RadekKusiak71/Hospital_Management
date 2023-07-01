@@ -1,0 +1,73 @@
+{% extends 'patient_page/base.html' %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'patient_page/css/appointments.css' %}">
+{% endblock %}
+{% block content %} 
+<div class="appointments_container">
+    <div class="upper_container">
+        <div class="left_upper">
+            <form action="" method="get">
+                <button type="submit" name="last" id="last" class="month_button" >last month</button>
+            </form>
+        </div>
+        <div class="middle_upper">
+            <form action="" method="GET">
+                <button type="submit" name="start_day" id="start_day" class="day_button" ><p>{{today_date}}</p></button>
+            </form>
+        </div>
+        <div class="right_upper">
+            <form action="" method="get">
+                <button type="submit" name="next" id="next" class="month_button" >next month</button>
+            </form>
+        </div>
+    </div>
+    <hr>
+    <div class="lower_container">
+            {% for day in days %}
+            {% for appointment in appointments %}
+                {% if appointment.date|date:"%m/%d/%Y" == day|date:"%m/%d/%Y" %}
+                    <div class="day appointment_booked">
+                        <div class="day_date">
+                            <h3>{{day}}</h3>
+                        </div>
+                        <hr>
+                        <div class="appointment">
+                            <p>Time: {{ appointment.date|date:"H:i" }}</p>
+                            <p>Room: {{ appointment.room.number}}</p>
+                            <p>Doctor: {{ appointment.doctor.firstname }} {{appointment.doctor.lastname}}</p>
+                            <p>Doctor Email: {{ appointment.doctor.email }}</p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="day">
+                        <div class="day_date">
+                            <h3>{{day}}</h3>
+                        </div>
+                        <div class="appointment_data">
+                            <p>No appointment today</p>
+                        </div>
+                    </div>
+                {% endif %}
+        
+            {% endfor %}
+            {% endfor %}
+    </div>
+    <div class="upper_container">
+        <div class="left_upper">
+            <form action="" method="get">
+                <button type="submit" name="last" id="last" class="month_button" >last month</button>
+            </form>
+        </div>
+        <div class="middle_upper">
+            <p>{{today_date}}</p>
+        </div>
+        <div class="right_upper">
+            <form action="" method="get">
+                <button type="submit" name="next" id="next" class="month_button" >next month</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
