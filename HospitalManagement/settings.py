@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'rest_framework',
 
     'main.apps.MainConfig',
+    'patient_site.apps.PatientSiteConfig',
+    'hospital_api.apps.HospitalApiConfig',
 ]
 
 MIDDLEWARE = [
