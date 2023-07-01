@@ -62,7 +62,8 @@ hr{
 }
 .profile_description{
     height: 98%;
-    width: 58%;
+    min-width: 58%;
+    width: fit-content;
     padding: 15px;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
     border-radius: 10px;
@@ -78,7 +79,7 @@ hr{
 .appointments{
     background-color: white;
     width: 100%;
-    min-height: 40rem;
+    min-height: 20rem;
     height: fit-content;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
     border-radius: 10px;

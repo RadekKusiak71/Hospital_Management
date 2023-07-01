@@ -12,17 +12,16 @@
               </svg>
         </div>
         <div class="profile_description">
-            <h1>Patien ID : 5</h1>
+            <h1>Patien ID : {{patient.id}}</h1>
             <hr>
-            <h1>Name: Miłosz Kuleba</h1>
-            <h1>Email: miłosz@gmail.com</h1>
+            <h1>Name: {{patient.firstname}} {{patient.lastname}}</h1>
+            <h1>Email: {{patient.email}}</h1>
         </div>
     </div>
     <div class="appointments">
         <div class="appointments_title">
-            <h1>Your appointments</h1>
+            <h1>Your upcoming appointment</h1>
         </div>
-        {% for apointment in apointments %}
                 <div class="apointment">
                     <hr>
                     <h4>Patient Full Name:</h4>
@@ -33,14 +32,12 @@
                     <h4>Apointment Status:</h4>
                     <div class="status">{% if apointment.status%} <p>Confirmed</p> {% else %} <p>Unconfirmed</p> {% endif %}</div>
                     <div class="buttons">
-                        <!-- CONNECT TO BACKEND -->
                         <form action="" method="POST">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger" name="delete" id=delete value="{{apointment.id}}">Delete</button>
                         </form>
                     </div>
                 </div>
-                {% endfor %}
         <hr>
     </div>
 </div>

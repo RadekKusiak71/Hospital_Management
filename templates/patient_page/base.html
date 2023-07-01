@@ -13,7 +13,7 @@
     <div class="header_container">
         <header>
             <div class="header_logo">
-                <a  class="header_title">
+                <a {% if user.is_authenticated%}href="{% url 'home_page_logged' %}"{%else%}href="{% url 'home_page' %}"{%endif%}class="header_title">
                     <div class="header_login_img">
                         <p>mediConnect</p>
                     </div>
@@ -31,7 +31,7 @@
                         <p>Doctors</p>
                     </div>
                 </a>
-                <a href="" class="header_buttons">
+                <a href="{% url 'appointments_page' %}" class="header_buttons">
                     <div class="header_login_img">
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-calendar" viewBox="0 0 16 16" class="side_bar_icons">
                             <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
@@ -41,7 +41,7 @@
                         <p>Appointments</p>
                     </div>
                 </a>
-                <a href="" class="header_buttons">
+                <a href="{% url 'perscription_page' %}" class="header_buttons">
                     <div class="header_login_img">
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-clipboard2-pulse" viewBox="0 0 16 16">
                             <path d="M9.5 0a.5.5 0 0 1 .5.5.5.5 0 0 0 .5.5.5.5 0 0 1 .5.5V2a.5.5 0 0 1-.5.5h-5A.5.5 0 0 1 5 2v-.5a.5.5 0 0 1 .5-.5.5.5 0 0 0 .5-.5.5.5 0 0 1 .5-.5h3Z"/>

@@ -23,7 +23,6 @@
                     <h4>Apointment Status:</h4>
                     <div class="status">{% if apointment.status%} <p>Confirmed</p> {% else %} <p>Unconfirmed</p> {% endif %}</div>
                     <div class="buttons">
-                        <!-- CONNECT TO BACKEND -->
                         <form action="" method="POST">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-success" name="confirm" id="confirm" value="{{apointment.id}}">Confirm</button>
@@ -40,7 +39,6 @@
             </div>
             <hr>
             <div class="message_form_cont">
-                <!-- CONNECT TO BACKEND -->
                 <form action="" method="POST">
                     {% csrf_token %}
                     {{message_form}}
