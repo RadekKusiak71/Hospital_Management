@@ -19,10 +19,13 @@ class HomePage(View):
         context = {}
         return render(request,'patient_page/home.html',context)
 
-method_decorator(login_required,name='dispatch')
+method_decorator(login_required(redirect_field_name='home_page'))
 class HomePageLogged(View):
     def get(self,request):
-        patient = Patient.objects.get(user=request.user)
+        if request.user.is_authenticated:
+            patient = Patient.objects.get(user=request.user)
+        else:
+            return redirect('home_page')
         apointments = Apointment.objects.filter(patient=patient).order_by('date')
         if apointments is None:
             apointments_list = self.check_dates(apointments)
@@ -47,7 +50,7 @@ class HomePageLogged(View):
                 apointment.delete()
         return obj_list
     
-method_decorator(login_required,name='dispatch')
+method_decorator(login_required(redirect_field_name='home_page'))
 class AppointmentsPage(View):
     today = datetime.date.today()
 
@@ -104,9 +107,11 @@ class AppointmentsPage(View):
         appointments = Apointment.objects.filter(patient=patient)
         return appointments
 
-method_decorator(login_required,name='dispatch')
+method_decorator(login_required(redirect_field_name='home_page'))
 class PerscriptionPage(View):
     def get(self,request):
+        if not request.user.is_authenticated:
+            return redirect('home_page')
         persciptions = self.get_perscription()
         context = {'prescriptions':persciptions}
         return render(request,'patient_page/perscription.html',context)
@@ -162,7 +167,7 @@ class RegisterPage(View):
         else:
             return HttpResponse('Invalid data. Please try again later.')
         
-method_decorator(login_required,name='dispatch')
+method_decorator(login_required(redirect_field_name='home_page'))
 class Logout(View):
     def get(self,request):
         logout(request)

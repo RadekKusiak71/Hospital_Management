@@ -12,19 +12,22 @@ from .forms import MessageForm,DoctorRegisterForm,DoctorUserLoginForm
 method_decorator(staff_member_required,name='dispatch')
 class DashboardPage(View):
     def get(self,request):
-        doctor = Doctor.objects.get(user=request.user)
-        form = MessageForm()
+        if request.user.is_staff:
+            doctor = Doctor.objects.get(user=request.user)
+            form = MessageForm()
 
-        apointments = Apointment.objects.filter(doctor=doctor).order_by('date')
-        apointments_list = self.check_dates(apointments)
+            apointments = Apointment.objects.filter(doctor=doctor).order_by('date')
+            apointments_list = self.check_dates(apointments)
 
-        meetings = Meeting.objects.filter(doctors=doctor).order_by('date')
-        meetings_list = self.check_dates(meetings)
-        context = {'apointments':apointments_list,
-                   'message_form':form,
-                   'meetings':meetings_list,
-                   }
-        return render(request,'main/dashboard.html',context)
+            meetings = Meeting.objects.filter(doctors=doctor).order_by('date')
+            meetings_list = self.check_dates(meetings)
+            context = {'apointments':apointments_list,
+                    'message_form':form,
+                    'meetings':meetings_list,
+                    }
+            return render(request,'main/dashboard.html',context)
+        else:
+            return HttpResponse('Only for staff members')
     
     def post(self,request):
         if 'msg_form' in request.POST:
@@ -60,11 +63,15 @@ class DashboardPage(View):
             if apointment.date > today:
                 obj_list.append(apointment)
         return obj_list
-
+    
+method_decorator(staff_member_required,name='dispatch')
 class CalendarPage(View):
     def get(self,request):
-        context = {}
-        return render(request,'main/doctor_calendar.html',context)
+        if request.user.is_staff:
+            context = {}
+            return render(request,'main/doctor_calendar.html',context)
+        else:
+            return HttpResponse('Only for staff members')
 
 class DoctorLoginPage(View):
     def get(self,request):
@@ -81,7 +88,7 @@ class DoctorLoginPage(View):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username,password=password)
-            if user is not None:
+            if user is not None and user.is_staff:
                 login(self.request,user)
                 return redirect(succes_url)
             else:

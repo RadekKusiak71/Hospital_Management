@@ -56,6 +56,7 @@
         </header>
     </div>
     <div class="container_main">
+    {% if user.is_staff %}
         <div class="side_bar">
             <div class="menu_link">
                 <a href="{% url 'dashboard' %}">
@@ -111,6 +112,7 @@
             <p style="text-align: center;">Perscription</p>
             <hr>
         </div>
+    {% endif %}
         <div class="main_content">
             {% block content %}
             <p>main container</p>
