@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator, MinLengthValidator,MaxLengthValidator
 
 class Patient(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
@@ -34,6 +34,10 @@ class Perscription(models.Model):
     medicine = models.ManyToManyField(Medicine)
     created_at = models.DateTimeField(auto_now_add=True)
     expire_date = models.DateField()
+    number = models.CharField(max_length=5,unique=True,validators=[
+        MinLengthValidator(4),
+        MaxLengthValidator(4)
+    ],default='0000')
 
 class Meeting(models.Model):
     date = models.DateTimeField()
