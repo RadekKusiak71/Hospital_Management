@@ -95,7 +95,7 @@
 .appointment_booked{
     min-height: 16rem;
     height: fit-content;
-    background-color:white;
+    background-color: #A9A9A9;
     transition: 0.4s ease-in-out;
     padding: 20px;
 }
@@ -103,5 +103,5 @@
     font-size: 30px;
 }
 .appointment_booked:hover{
-    background-color: #A9A9A9;
+    background-color: white;
 }
