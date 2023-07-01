@@ -16,6 +16,13 @@ class MessageForm(ModelForm):
             'class':'form-control',
             'placeholder':'Choose a reciver'
         })
+        self.fields['title'].widget.attrs.update({
+            'required':'',
+            'name':'title_form',
+            'id':'title_form',
+            'class':'form-control',
+            'placeholder':'Title'
+        })
         self.fields['body'].widget.attrs.update({
             'required':'',
             'name':'body',
@@ -24,10 +31,12 @@ class MessageForm(ModelForm):
             'class':'form-control',
             'placeholder':'Write a message',
         })
+        
     class Meta:
         model = Message 
-        fields = ('reciver','body')
+        fields = ('title','reciver','body')
         labels = {
+            'title':'Message title',
             'reciver' : 'Reciver',
             'body':'Message',
         }
