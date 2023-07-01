@@ -26,32 +26,43 @@
     <hr>
     <div class="lower_container">
             {% for day in days %}
-            {% for appointment in appointments %}
-                {% if appointment.date|date:"%m/%d/%Y" == day|date:"%m/%d/%Y" %}
-                    <div class="day appointment_booked">
-                        <div class="day_date">
-                            <h3>{{day}}</h3>
-                        </div>
-                        <hr>
-                        <div class="appointment">
-                            <p>Time: {{ appointment.date|date:"H:i" }}</p>
-                            <p>Room: {{ appointment.room.number}}</p>
-                            <p>Doctor: {{ appointment.doctor.firstname }} {{appointment.doctor.lastname}}</p>
-                            <p>Doctor Email: {{ appointment.doctor.email }}</p>
-                        </div>
-                    </div>
+                {% if appointments %}
+                    {% for appointment in appointments %}
+                        {% if appointment.date|date:"%m/%d/%Y" == day|date:"%m/%d/%Y" %}
+                            <div class="day appointment_booked">
+                                <div class="day_date">
+                                    <h3>{{day}}</h3>
+                                </div>
+                                <hr>
+                                <div class="appointment">
+                                    <p>Time: {{ appointment.date|date:"H:i" }}</p>
+                                    <p>Room: {{ appointment.room.number}}</p>
+                                    <p>Doctor: {{ appointment.doctor.firstname }} {{appointment.doctor.lastname}}</p>
+                                    <p>Doctor Email: {{ appointment.doctor.email }}</p>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="day">
+                                <div class="day_date">
+                                    <h3>{{day}}</h3>
+                                </div>
+                                <div class="appointment_data">
+                                    <p>No appointment today</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                            
+                    {% endfor %}
                 {% else %}
-                    <div class="day">
-                        <div class="day_date">
-                            <h3>{{day}}</h3>
-                        </div>
-                        <div class="appointment_data">
-                            <p>No appointment today</p>
-                        </div>
+                <div class="day">
+                    <div class="day_date">
+                        <h3>{{day}}</h3>
                     </div>
+                    <div class="appointment_data">
+                        <p>No appointment today</p>
+                    </div>
+                </div>
                 {% endif %}
-        
-            {% endfor %}
             {% endfor %}
     </div>
     <div class="upper_container">

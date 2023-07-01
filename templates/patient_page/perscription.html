@@ -1,6 +1,36 @@
 {% extends 'patient_page/base.html' %}
 {% load static %}
-{% block title %}{% endblock %}
-{% block css %} <link rel="stylesheet" href="{% static 'patient_page/css/perscription.css' %}">{% endblock %}
+
+{% block title %}Prescriptions{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="{% static 'patient_page/css/perscription.css' %}">
+{% endblock %}
+
 {% block content %}
+  <div class="container">
+    <h1>Prescriptions</h1>
+    {% if prescriptions %}
+      <ul class="prescription-list">
+        {% for prescription in prescriptions %}
+          <li class="prescription-item">
+            <h2 class="prescription-number">Prescription Number: {{ prescription.number }}</h2>
+            <p class="created-at">Created at: {{ prescription.created_at }}</p>
+            <p class="expire-date">Expire date: {{ prescription.expire_date }}</p>
+            <h3 class="medicine-heading">Medicines:</h3>
+            <ul class="medicine-list">
+              {% for medicine in prescription.medicine.all %}
+                <li class="medicine-item">
+                  <span class="medicine-name">{{ medicine.name }}</span>
+                  <span class="medicine-price">Price: {{ medicine.price }}</span>
+                </li>
+              {% endfor %}
+            </ul>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No prescriptions found.</p>
+    {% endif %}
+  </div>
 {% endblock %}

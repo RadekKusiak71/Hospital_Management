@@ -112,7 +112,8 @@ class DoctorRegisterPage(View):
             return redirect(success_url)
         else:
             return HttpResponse('Invalid data. Please try again later.')
-
+        
+method_decorator(staff_member_required,name='dispatch')
 class DoctorLogout(View):
     def get(self,request):
         logout(request)

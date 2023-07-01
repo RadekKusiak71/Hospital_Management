@@ -22,6 +22,8 @@
         <div class="appointments_title">
             <h1>Your upcoming appointment</h1>
         </div>
+        <hr>
+        {% if apointment %}
                 <div class="apointment">
                     <hr>
                     <h4>Patient Full Name:</h4>
@@ -40,7 +42,10 @@
                         {% endif %}
                     </div>
                 </div>
-        <hr>
+                <hr>
+        {% else %}
+        <h3 style="margin-top: 2rem;text-align: center;">No appointment found</h3>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

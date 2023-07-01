@@ -1,12 +1,16 @@
-from django.shortcuts import render,redirect
-from django.views import View
-from main.models import Patient,Apointment
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 import calendar
 import datetime
 from datetime import timedelta
+from django.http import HttpResponse
+from django.shortcuts import render,redirect
+from django.views import View
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login,logout,authenticate
+
+from main.models import Patient,Apointment,Perscription
+from .forms import RegisterForm,UserLoginForm
 
 class HomePage(View):
     def get(self,request):
@@ -20,8 +24,12 @@ class HomePageLogged(View):
     def get(self,request):
         patient = Patient.objects.get(user=request.user)
         apointments = Apointment.objects.filter(patient=patient).order_by('date')
-        apointments_list = self.check_dates(apointments)
-        context = {'apointment':apointments_list[0],'patient':patient}
+        if apointments is None:
+            apointments_list = self.check_dates(apointments)
+            context = {'apointment':apointments_list[0],'patient':patient}
+        else:
+            apointments_list = []
+            context = {'apointment':apointments_list,'patient':patient}
         return render(request,'patient_page/home_log.html',context)
     
     def post(self,request):
@@ -39,7 +47,7 @@ class HomePageLogged(View):
                 apointment.delete()
         return obj_list
     
-
+method_decorator(login_required,name='dispatch')
 class AppointmentsPage(View):
     today = datetime.date.today()
 
@@ -96,8 +104,67 @@ class AppointmentsPage(View):
         appointments = Apointment.objects.filter(patient=patient)
         return appointments
 
-
+method_decorator(login_required,name='dispatch')
 class PerscriptionPage(View):
     def get(self,request):
-        context = {}
-        return render(request,'patient_page/perscription.html',{})
+        persciptions = self.get_perscription()
+        context = {'prescriptions':persciptions}
+        return render(request,'patient_page/perscription.html',context)
+    
+    def get_perscription(self):
+        return Perscription.objects.filter(patient=Patient.objects.get(user=self.request.user))
+    
+
+class LoginPage(View):
+    def get(self,request):
+        form = UserLoginForm()
+        context = {'login_form':form}
+        return render(request,'patient_page/login_page.html',context)
+    
+    def post(self,request):
+        form = UserLoginForm(request,data=request.POST)
+        return  self.form_validation(form,'home_page_logged')
+    
+    def form_validation(self,form,succes_url):
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username,password=password)
+            if user is not None:
+                login(self.request,user)
+                return redirect(succes_url)
+            else:
+                return HttpResponse('Invalid data try again later')
+        else:
+            return HttpResponse('Invalid data try again later')
+
+class RegisterPage(View):
+    def get(self, request):
+        form = RegisterForm()
+        context = {'register_form': form}
+        return render(request, 'patient_page/register_page.html', context)
+
+    def post(self, request):
+        form = RegisterForm(request.POST)
+        return self.form_validation(form, 'login_page')
+
+    def form_validation(self, form, success_url):
+        if form.is_valid():
+            user = form.save()
+            Patient.objects.create(
+                user=user,
+                firstname=user.first_name,
+                lastname=user.last_name,
+                email=user.email,
+                phone_number='000000000'
+            )
+            return redirect(success_url)
+        else:
+            return HttpResponse('Invalid data. Please try again later.')
+        
+method_decorator(login_required,name='dispatch')
+class Logout(View):
+    def get(self,request):
+        logout(request)
+        return redirect('home_page')
+    
