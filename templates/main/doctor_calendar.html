@@ -1,7 +1,75 @@
 {% extends 'main/base.html' %}
 {% load static %}
-{% block title %} Doctor Calendar {% endblock %}
-{% block css %} <link rel="stylesheet" href="{% static 'main/css/doctor_calendar.css' %}"> {% endblock %}
-{% block content %}
-    <h1>Calendar</h1>
+{% block title %}{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'patient_page/css/appointments.css' %}">
+{% endblock %}
+{% block content %} 
+<div class="appointments_container">
+    <div class="upper_container">
+        <div class="left_upper">
+            <form action="" method="get">
+                <button type="submit" name="last" id="last" class="month_button" >last month</button>
+            </form>
+        </div>
+        <div class="middle_upper">
+            <form action="" method="GET">
+                <button type="submit" name="start_day" id="start_day" class="day_button" ><p>{{today_date}}</p></button>
+            </form>
+        </div>
+        <div class="right_upper">
+            <form action="" method="get">
+                <button type="submit" name="next" id="next" class="month_button" >next month</button>
+            </form>
+        </div>
+    </div>
+    <hr>
+    <div class="lower_container">
+    {% for day in days %}
+        {% if day|length != 1 %}
+            {% for data in day %}
+                {% if data.status == True or data.status == False %}
+                    <div class="day appointment_booked">
+                        <div class="day_date">
+                            <h3>{{day.0}}</h3>
+                        </div>
+                        <hr>
+                        <div class="appointment">
+                            <p>Time: {{ data.date|date:"H:i" }}</p>
+                            <p>Room: {{ data.room.number}}</p>
+                            <p>Patient: {{ data.patient.firstname }} {{data.patient.lastname}}</p>
+                            <p>Patient Email: {{ data.patient.email }}</p>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <div class="day">
+                <div class="day_date">
+                    <h3>{{day.0}}</h3>
+                </div>
+                <div class="appointment_data">
+                    <p>No appointment today</p>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+    </div>
+    <hr>
+    <div class="upper_container">
+        <div class="left_upper">
+            <form action="" method="get">
+                <button type="submit" name="last" id="last" class="month_button" >last month</button>
+            </form>
+        </div>
+        <div class="middle_upper">
+            <p>{{today_date}}</p>
+        </div>
+        <div class="right_upper">
+            <form action="" method="get">
+                <button type="submit" name="next" id="next" class="month_button" >next month</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
