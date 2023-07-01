@@ -1,0 +1,20 @@
+{% extends 'patient_page/base.html' %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block css %} <link rel="stylesheet" href="{% static 'patient_page/css/home.css' %}">{% endblock %}
+{% block content %}
+
+<div class="upper_container">
+    <div class="upper_left upper">
+        <div class="upper_text">
+            <h1>Welcome to mediConnect</h1>
+            <h3>This is a medical platform designed for companies</h3>
+            <h3>It facilitates efficient patient management</h3>
+            <h3>And streamlines organizational tasks</h3>
+        </div>
+    </div>
+    <div class="upper_right upper">
+        <img src="{% static 'patient_page/images/hospital.jpg' %}" alt="xd">
+    </div>
+</div>
+{% endblock %}
