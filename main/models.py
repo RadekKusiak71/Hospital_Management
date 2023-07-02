@@ -48,16 +48,20 @@ class Medicine(models.Model):
 class Perscription(models.Model):
     patient = models.ForeignKey(Patient,on_delete=models.CASCADE)
     doctor = models.ForeignKey(Doctor,on_delete=models.CASCADE)
-    medicine = models.ManyToManyField(Medicine)
     created_at = models.DateTimeField(auto_now_add=True)
-    expire_date = models.DateField()
-    number = models.CharField(max_length=5,unique=True,validators=[
-        MinLengthValidator(4),
-        MaxLengthValidator(4)
-    ],default='0000')
+    expire_date = models.DateField(null=True)
+    status = models.BooleanField(default=False)
+    id = models.AutoField(primary_key=True)
 
     def __str__(self) -> str:
-        return f'{self.patient.firstname} - {self.patient.lastname} perscription number {self.number}'
+        return f'{self.patient.firstname} - {self.patient.lastname} perscription number {self.id}'
+
+class PerscriptionItems(models.Model):
+    perscription = models.ForeignKey(Perscription,on_delete=models.CASCADE)
+    medicine = models.ForeignKey('Medicine',on_delete=models.CASCADE)
+
+    def __str__(self) -> str:
+        return f'Perscription number: {self.perscription.id}'
     
 class Meeting(models.Model):
     date = models.DateTimeField()
