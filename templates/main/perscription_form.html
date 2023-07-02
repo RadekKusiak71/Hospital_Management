@@ -1,0 +1,39 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %} {{user}} {% endblock %}
+{% block css %} <link rel="stylesheet" href="{% static 'main/css/perscription_doctor.css' %}"> {% endblock %}
+{% block content %}
+<div class="pr_content">
+    <div class="search_form">
+        <form action="" method="get">
+            <input type="text"  class="form-control" name="medicine_query" placeholder="Search for a medicine..." style="width: 80%;margin: auto; margin-top: 2rem;">
+        </form>
+        <form action="" method="get" style="width: 80%;height: 2rem;margin: auto; margin-top: 1rem;">
+            <button class="btn btn-secondary" name="clear" style="width: 20%;margin: auto;">Clear Query</button>
+        </form>
+        <form action="" method="POST" style="width: 80%;height: 2rem;margin: auto; margin-top: 1rem;">
+            {% csrf_token %}
+            <input type="date"  class="form-control" placeholder="Input expire date">
+            <button class="btn btn-secondary" name="create_perscription" value="{{user.id}}" style="width: 20%;margin-top:1rem;">Create Persciption</button>
+        </form>
+    </div>
+    <hr>
+    <div class="medicines_container">
+    {% if medicines %}
+        {% for medicine in medicines %}
+        <div class="medicine">
+            <h2>{{medicine.name}}</h2>
+            <h3>Price: {{medicine.price}}$</h3>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-secondary" name="medicine_id" value="{{medicine.id}}">Add to perscription</button>
+            </form>
+        </div>
+        {% endfor %}
+    {% else %}
+        <h1>No results</h1>
+    {% endif %}
+    </div>
+    <div class="perscription_form"></div>
+</div>
+{% endblock %}

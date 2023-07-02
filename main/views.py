@@ -10,7 +10,7 @@ from django.contrib.auth import logout,login,authenticate
 from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
 
-from main.models import Patient,Doctor,Apointment,Medicine,Perscription,Meeting,Room,Message
+from main.models import Patient,Doctor,Apointment,Medicine,Perscription,Meeting,Room,Message,PerscriptionItems
 from .forms import MessageForm,DoctorRegisterForm,DoctorUserLoginForm
 
 method_decorator(staff_member_required,name='dispatch')
@@ -169,6 +169,7 @@ class CalendarPage(View):
                 appointment_list.append(appointment)
         return appointment_list
     
+method_decorator(staff_member_required,name='dispatch')
 class MessagesPage(View):
     def get(self,request):
         if request.user.is_staff:
@@ -178,7 +179,8 @@ class MessagesPage(View):
             return render(request,'main/messages.html',context)
         else:
             return HttpResponse('Only for staff memebers')
-
+        
+method_decorator(staff_member_required,name='dispatch')
 class MessagePage(View):
     def get(self,request,msg_id):
         if request.user.is_staff:
@@ -199,16 +201,90 @@ class MessagePage(View):
         message = Message.objects.get(id=msg_id).delete()
         return redirect('doctor_messages')
     
-    def change_status(self,msg_id):
+    def change_status(self, msg_id):
         message = Message.objects.get(id=msg_id)
-        if message.readed:
-            message.readed = False
-            message.save()
-        else:
-            message.readed = True
-            message.save()
+        message.readed = not message.readed
+        message.save()
         return redirect('doctor_messages')
     
+method_decorator(staff_member_required,name='dispatch')
+class PerscriptionCreate(View):
+    def get(self,request):
+        if request.user.is_staff:
+            patients = Patient.objects.all()
+
+            if 'firstname' in request.GET:
+                patients = self.get_patient_firstname
+            elif 'lastname' in request.GET:
+                patients = self.get_patient_lastname
+            elif 'clear' in request.GET:
+                return redirect('doctor_perscription')
+        
+            context = {'patients':patients}
+            return render(request,'main/perscription_create.html',context)
+        else:
+            return HttpResponse('Only for staff members')
+    
+    
+    def get_patient_firstname(self):
+        data = self.request.GET.get('firstname')
+        print(data)
+        patients = Patient.objects.filter(firstname__contains=data)
+        return patients
+
+    
+    def get_patient_lastname(self):
+        data = self.request.GET.get('lastname')
+        patients = Patient.objects.filter(lastname__contains=data)
+        return patients
+    
+method_decorator(staff_member_required,name='dispatch')
+class PerscriptionCreateForm(View):
+    def get(self,request,user_id):
+        if 'medicine_query' in request.GET:
+            query = request.GET.get('medicine_query')
+            medicines = self.get_med_query(query)
+        elif 'clear' in request.GET:
+            return redirect('perscription_create',user_id)
+        else:
+            medicines = Medicine.objects.all()
+        context = {'medicines':medicines}
+        return render(request,'main/perscription_form.html',context)
+
+    def post(self,request,user_id):
+        patient = Patient.objects.get(id=user_id)
+        if 'medicine_id' in request.POST:
+            med_id = request.POST.get('medicine_id')
+            self.create_perscription_item(patient,med_id)
+        if 'create_perscription' in request.POST:
+            perscription = self.get_perscription(patient)
+            perscription.status = True
+            perscription.save()
+            return redirect('dashboard')
+        return redirect('perscription_create',user_id)
+    
+    def create_perscription_item(self,patient,item_id):
+        item_id = self.request.POST.get('medicine_id')
+        perscription = self.get_perscription(patient)
+        PerscriptionItems.objects.create(perscription=perscription,medicine = Medicine.objects.get(id=item_id))
+
+    def get_perscription(self,patient):
+        perscription,created = Perscription.objects.get_or_create(patient=patient,doctor=Doctor.objects.get(user=self.request.user),status=False)
+        return perscription
+    
+    def get_med_query(self,query):
+        medicines = Medicine.objects.filter(name__contains=query)
+        return medicines
+
+method_decorator(staff_member_required,name='dispatch')
+class MeetingsPage(View):
+    def get(self,request):
+        if request.user.is_staff:
+            context = {}
+            return render(request,'main/meetings_create.html',context)
+        else:
+            return HttpResponse('Only for staff members')
+        
 class DoctorLoginPage(View):
     def get(self,request):
         form = DoctorUserLoginForm()
