@@ -6,6 +6,7 @@
   - Css
   - Bootstrap
   - Django Rest Framework
+  - PostgreSQL ( after i'll end whole application i'll connect it to PostgreSQL )
 ## Instalation:
   - Clone repository
   - Create virtual environment
@@ -34,5 +35,7 @@
       - HospitalApi - handling a api build in Django Rest Framework ( in development )
       - main - handlin a managment system for staff members where u can manage appointments, create perscriptions etc.
       - patient_site = handling a application for patients where they can check their appointments, perscriptions etc.
+  - Class-based View project
+  - Database overview: https://drawsql.app/teams/hospital-2/diagrams/doctors
         
 
