@@ -29,4 +29,10 @@
     Login : admin
     Password: 123
     ```
+## About Project
+  - Project contains 3 applications:
+      - HospitalApi - handling a api build in Django Rest Framework ( in development )
+      - main - handlin a managment system for staff members where u can manage appointments, create perscriptions etc.
+      - patient_site = handling a application for patients where they can check their appointments, perscriptions etc.
+        
 
