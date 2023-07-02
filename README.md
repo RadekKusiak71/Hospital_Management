@@ -1,6 +1,7 @@
-# Hospital_Management still in development
+# Hospital_Management
 ## Technologies used:
   - Django
+  - Django Rest Framework
   - Python
   - HTML
   - CSS
@@ -32,7 +33,7 @@
     ```
 ## About Project
   - Project contains 3 applications:
-      - HospitalApi - handling a api build in Django Rest Framework ( in development )
+      - api - handling a api build in Django Rest Framework ( currently working on this )
       - main - handlin a managment system for staff members where u can manage appointments, create perscriptions etc.
       - patient_site = handling a application for patients where they can check their appointments, perscriptions etc.
   - Class-based View project
