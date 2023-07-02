@@ -9,9 +9,10 @@ from django.contrib import messages
 from django.contrib.auth import logout,login,authenticate
 from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
+from django.core.exceptions import PermissionDenied
 
-from main.models import Patient,Doctor,Appointment,Medicine,Perscription,Meeting,Room,Message,PerscriptionItems
-from .forms import MessageForm,DoctorRegisterForm,DoctorUserLoginForm
+from main.models import Patient,Doctor,Appointment,Medicine,Perscription,Room,Message,PerscriptionItems
+from .forms import MessageForm,DoctorRegisterForm,DoctorUserLoginForm,PatientForm
 
 method_decorator(staff_member_required,name='dispatch')
 class DashboardPage(View):
@@ -23,15 +24,12 @@ class DashboardPage(View):
             appointments = Appointment.objects.filter(doctor=doctor).order_by('date')
             appointments_list = self.check_dates(appointments)
 
-            meetings = Meeting.objects.filter(doctors=doctor).order_by('date')
-            meetings_list = self.check_dates(meetings)
             context = {'appointments':appointments_list,
                     'message_form':form,
-                    'meetings':meetings_list,
                     }
             return render(request,'main/dashboard.html',context)
         else:
-            return HttpResponse('Only for staff members')
+            raise PermissionDenied()
     
     def post(self,request):
         if 'msg_form' in request.POST:
@@ -112,12 +110,37 @@ class CalendarPage(View):
                 patients = self.search_query()
                 appointments = self.search_appointments(patients)
                 days_list = [[appointment] for appointment in appointments]
-            
+
+            elif 'search_room' in request.GET:
+                try:
+                    CalendarPage.today = datetime.date.today()
+                    calendar = self.get_month(CalendarPage.today)
+                    days = self.get_days(calendar)
+                    appointments = self.search_by_room()
+                    days_list = [[appointment] for appointment in appointments]
+                except ValueError:
+                    return HttpResponse('Invalid Input')
+
             context = {'calendar': calendar, 'days': days_list,'today_date':day,'appointments':appointments}
             return render(request, 'main/doctor_calendar.html', context)
         else:
-            return HttpResponse('Only for staff members')
+            raise PermissionDenied()
         
+    def search_by_room(self):
+        room = self.request.GET.get('search_room')
+        try:
+            room = Room.objects.get(number=room)
+            app_list = []
+            for app in Appointment.objects.filter(room=room):
+                app_list.append(app)
+            return app_list
+        
+        except UnboundLocalError:
+            return [] 
+        
+        except Room.DoesNotExist:
+            return []
+
     def update_list(self, appointments, day_list):
         days_l = [[day] for day in day_list]
         for appointment in appointments:
@@ -156,7 +179,6 @@ class CalendarPage(View):
             for patient_data in Patient.objects.filter(firstname__contains = patient):
                 patient_list.append(patient_data)
         elif Patient.objects.filter(lastname__contains = patient) is not None:
-            print(Patient.objects.filter(lastname__contains = patient))
             for patient_data in Patient.objects.filter(lastname__contains = patient):
                 patient_list.append(patient_data)
         return patient_list
@@ -178,7 +200,7 @@ class MessagesPage(View):
             context = {'recived':msg_recived,'sended':msg_sended}
             return render(request,'main/messages.html',context)
         else:
-            return HttpResponse('Only for staff memebers')
+            raise PermissionDenied()
         
 method_decorator(staff_member_required,name='dispatch')
 class MessagePage(View):
@@ -190,7 +212,7 @@ class MessagePage(View):
             context = {'message':message}
             return render(request,'main/message.html',context)
         else:
-            return HttpResponse('Only for staff members')
+            raise PermissionDenied()
     def post(self,request,msg_id):
         if 'unread' in request.POST:
             return self.change_status(msg_id)
@@ -223,12 +245,11 @@ class PerscriptionCreate(View):
             context = {'patients':patients}
             return render(request,'main/perscription_create.html',context)
         else:
-            return HttpResponse('Only for staff members')
+            raise PermissionDenied()
     
     
     def get_patient_firstname(self):
         data = self.request.GET.get('firstname')
-        print(data)
         patients = Patient.objects.filter(firstname__contains=data)
         return patients
 
@@ -241,15 +262,18 @@ class PerscriptionCreate(View):
 method_decorator(staff_member_required,name='dispatch')
 class PerscriptionCreateForm(View):
     def get(self,request,user_id):
-        if 'medicine_query' in request.GET:
-            query = request.GET.get('medicine_query')
-            medicines = self.get_med_query(query)
-        elif 'clear' in request.GET:
-            return redirect('perscription_create',user_id)
+        if request.user.is_staff:
+            if 'medicine_query' in request.GET:
+                query = request.GET.get('medicine_query')
+                medicines = self.get_med_query(query)
+            elif 'clear' in request.GET:
+                return redirect('perscription_create',user_id)
+            else:
+                medicines = Medicine.objects.all()
+            context = {'medicines':medicines}
+            return render(request,'main/perscription_form.html',context)
         else:
-            medicines = Medicine.objects.all()
-        context = {'medicines':medicines}
-        return render(request,'main/perscription_form.html',context)
+            raise PermissionDenied()
 
     def post(self,request,user_id):
         patient = Patient.objects.get(id=user_id)
@@ -275,7 +299,85 @@ class PerscriptionCreateForm(View):
     def get_med_query(self,query):
         medicines = Medicine.objects.filter(name__contains=query)
         return medicines
+    
+method_decorator(staff_member_required,name='dispatch')
+class CreateAppointment(PerscriptionCreate,View):
+    def get(self,request):
+        if request.user.is_staff:
+            patients = Patient.objects.all()
 
+            if 'firstname' in request.GET:
+                patients = self.get_patient_firstname
+            elif 'lastname' in request.GET:
+                patients = self.get_patient_lastname
+            elif 'clear' in request.GET:
+                return redirect('doctor_perscription')
+            context = {'patients':patients}
+
+            return render(request,'main/create_appointment.html',context)
+        else:
+            raise PermissionDenied()
+        
+class CreateAppointmentForm(View):
+    today = datetime.date.today()
+    def get(self,request,patient_id):
+        if request.user.is_staff:
+            patient_data = Patient.objects.get(id=patient_id)
+
+            appointmets = Appointment.objects.filter()
+            for i in appointmets:
+                print(i.date)
+            rooms = Room.objects.all()
+
+
+            # QUERIES
+            if 'last_day' in request.GET:
+                CreateAppointmentForm.today = self.last_day(CreateAppointmentForm.today)
+                return redirect('doctor_appointments_create', patient_id)
+            if 'next_day' in request.GET:
+                CreateAppointmentForm.today = self.next_day(CreateAppointmentForm.today)
+                return redirect('doctor_appointments_create', patient_id)
+            
+
+            context = {'patient_data':patient_data,'rooms':rooms,'today':CreateAppointmentForm.today,'appointmets':appointmets}
+            return render(request,'main/appointment_create.html',context)
+        else:
+            raise PermissionDenied()
+        
+    def post(self,request,patient_id):
+        date = request.POST.get('date')
+        time = request.POST.get('time')
+        datetime = f'{date} {time}'
+        room = Room.objects.get(id=request.POST.get('room'))
+
+        Appointment.objects.create(patient=Patient.objects.get(id=patient_id),doctor=Doctor.objects.get(user=request.user),date=datetime,room=room)
+
+        return redirect('dashboard')
+
+
+    def next_day(self,today):
+        today += timedelta(days=1)
+        return today
+    def last_day(self,today):
+        if today == datetime.date.today():
+            pass
+        else:
+            today -= timedelta(days=1)
+        return today
+    
+class CreatePatient(View):
+    def get(self,request):
+        if request.user.is_staff:
+            context = {'patient_form':PatientForm()}
+            return render(request,'main/patient_create.html',context)
+        else:
+            raise PermissionDenied()
+    def post(self,request):
+        form = PatientForm(request.POST)
+        if form.is_valid():
+            patient = form.save()
+        return redirect('doctor_appointments_create', patient.id)
+    
 method_decorator(staff_member_required,name='dispatch')
 class MeetingsPage(View):
     def get(self,request):
@@ -283,7 +385,7 @@ class MeetingsPage(View):
             context = {}
             return render(request,'main/meetings_create.html',context)
         else:
-            return HttpResponse('Only for staff members')
+            raise PermissionDenied()
         
 class DoctorLoginPage(View):
     def get(self,request):

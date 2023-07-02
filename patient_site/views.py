@@ -8,6 +8,7 @@ from django.views import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login,logout,authenticate
+from django.core.exceptions import PermissionDenied
 
 from main.models import Patient,Appointment,Perscription
 from .forms import RegisterForm,UserLoginForm
@@ -25,7 +26,7 @@ class HomePageLogged(View):
         if request.user.is_authenticated:
             patient = Patient.objects.get(user=request.user)
         else:
-            return redirect('home_page')
+            raise PermissionDenied()
         appointments = Appointment.objects.filter(patient=patient).order_by('date')
         if appointments is None:
             appointments_list = self.check_dates(appointments)
@@ -55,6 +56,8 @@ class AppointmentsPage(View):
     today = datetime.date.today()
 
     def get(self, request):
+        if not request.user.is_authenticated:
+            raise PermissionDenied()
         day = datetime.date.today()
         appointments = self.get_user_appointments()
 
@@ -77,7 +80,7 @@ method_decorator(login_required(redirect_field_name='home_page'))
 class PerscriptionPage(View):
     def get(self,request):
         if not request.user.is_authenticated:
-            return redirect('home_page')
+            raise PermissionDenied()
         persciptions = self.get_perscription()
         context = {'prescriptions':persciptions}
         return render(request,'patient_page/perscription.html',context)
