@@ -43,8 +43,9 @@ INSTALLED_APPS = [
 
     'main.apps.MainConfig',
     'patient_site.apps.PatientSiteConfig',
-    'hospital_api.apps.HospitalApiConfig',
+    'api.apps.ApiConfig',
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
