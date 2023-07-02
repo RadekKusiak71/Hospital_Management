@@ -40,7 +40,7 @@
 
 ## Little overview how main pages looks:
 ### Staff home page:
-![staff_page_image](https://github.com/RadekKusiak71/Hospital_Management/assets/121208184/ebc34839-6ffd-43ee-acb1-9a787af45a5e)
+![staff_page_image](https://github.com/RadekKusiak71/Hospital_Management/assets/121208184/ddffa579-718b-4707-ad2d-3d3baca0422d)
 ### Patient home page:
 ![patient_home_page](https://github.com/RadekKusiak71/Hospital_Management/assets/121208184/713d55b9-2910-47cf-9613-2930ac91976d)
 
