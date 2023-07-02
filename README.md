@@ -15,15 +15,15 @@
     ```
   - Activate virtual environment:
     ```
-    env/Scripts/activate
+    > env/Scripts/activate
     ```
   - Install packages
     ```
-    pip install -r requirements.txt
+    > pip install -r requirements.txt
     ```
   - Start Server :)
     ```
-    py manage.py runserver
+    > py manage.py runserver
     ```
   - Test User
     ```
