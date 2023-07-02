@@ -1,9 +1,57 @@
+from typing import Any, Dict, Mapping, Optional, Type, Union
 from django import forms
+from django.core.files.base import File
+from django.db.models.base import Model
 from django.forms import ModelForm,TextInput, EmailInput
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm, UsernameField
-from main.models import Patient,Doctor,Appointment,Medicine,Perscription,Meeting,Room,Message
+from django.forms.utils import ErrorList
+from main.models import Patient,Doctor,Appointment,Medicine,Perscription,Room,Message
+
+class AppointmentForm(ModelForm):
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.fields['date'].widget.attrs.update({
+            'required':'',
+            'name':'date',
+            'id':'date',
+            'class':'form-control',
+            'placeholder':'Choose a date'
+        })
+    class Meta:
+        model = Appointment
+        exclude = ('patient','doctor','created_at','status','room')
+
+class PatientForm(ModelForm):
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.fields['firstname'].widget.attrs.update({
+            'required':'',
+            'name':'firstname',
+            'id':'firstname',
+            'class':'form-control',
+            'placeholder':'First name '
+        })
+        self.fields['lastname'].widget.attrs.update({
+            'required':'',
+            'name':'lastname',
+            'id':'lastname',
+            'class':'form-control',
+            'placeholder':'Last name'
+        })
+        self.fields['email'].widget.attrs.update({
+            'required':'',
+            'name':'email',
+            'id':'email',
+            'class':'form-control',
+            'type':'email',
+            'placeholder':'E-mail'
+        })
+
+    class Meta:
+        model = Patient
+        exclude = ('user',)
 
 
 class MessageForm(ModelForm):
@@ -42,7 +90,6 @@ class MessageForm(ModelForm):
         }
 
 class DoctorRegisterForm(UserCreationForm):
-    email = forms.EmailField(required=True)
     first_name = forms.CharField(max_length=50,required=True)
     last_name = forms.CharField(max_length=50,required=True)
     
@@ -72,14 +119,6 @@ class DoctorRegisterForm(UserCreationForm):
             'class':'form-control',
             'placeholder':'Last Name'
         })
-        self.fields['email'].widget.attrs.update({
-            'required':'',
-            'name':'email',
-            'id':'email',
-            'type':'email',
-            'class':'form-control',
-            'placeholder':'E-Mail'
-        })
         self.fields['password1'].widget.attrs.update({
             'required':'',
             'name':'password1',
@@ -99,13 +138,13 @@ class DoctorRegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username','first_name','last_name','email','password1','password2')
+        fields = ('username','first_name','last_name','password1','password2')
         
-    def save(self,commit=True):
-        user = super(DoctorRegisterForm,self).save(commit=False)
-        user.email = self.cleaned_data['email']
+    def save(self, commit=True):
+        user = super().save(commit=False)
         user.first_name = self.cleaned_data['first_name']
         user.last_name = self.cleaned_data['last_name']
+        user.email = f'{user.first_name}{user.last_name}@mediconnect.com'.lower()
         user.is_staff = True
         if commit:
             user.save()
