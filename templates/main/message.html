@@ -1,0 +1,27 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %} {{message.title}} {% endblock %}
+{% block css %} <link rel="stylesheet" href="{% static 'main/css/messages.css' %}"> {% endblock %}
+{% block content %}
+<div class="message_container">
+    <div class="msg_title">
+        <h1>{{message.title}}</h1>
+    </div>
+    <hr>
+    <div class="msg_sender">
+        <div class="sender">
+            <h5>Sender: {{message.sender}} | <span style="font-size: 10px;">{{message.sender.email}} to {{message.reciver.email}}</span> |</h5>
+        </div>
+        <div class="buttons">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <button class="btn btn-secondary" name="unread">Unread</button>
+                <button class="btn btn-secondary"  name="delete">delete</button>
+            </form>
+        </div>
+    </div>
+    <div class="message_data_container" style="margin-top: 0.5rem;">
+        <p>{{message.body}}</p>
+    </div>
+</div>
+{% endblock %}

@@ -23,15 +23,41 @@
             </form>
         </div>
     </div>
+    <div class="search_form">
+        <form action="" method="">
+            <div class="search-box">
+                <button class="btn-search"><i class="fas fa-search"></i></button>
+                <input type="text" class="input-search" name="search_query" placeholder="Search by firstname/lastname...">
+          </div>
+        </form>
+    </div>
     <hr>
     <div class="lower_container">
-    {% for day in days %}
-        {% if day|length != 1 %}
-            {% for data in day %}
-                {% if data.status == True or data.status == False %}
+    {% if days|length > 0 %}
+        {% for day in days %}
+            {% if day|length != 1 %}
+                {% for data in day %}
+                    {% if data.status == True or data.status == False %}
+                        <div class="day appointment_booked">
+                            <div class="day_date">
+                                <h3>{{day.0}}</h3>
+                            </div>
+                            <hr>
+                            <div class="appointment">
+                                <p>Time: {{ data.date|date:"H:i" }}</p>
+                                <p>Room: {{ data.room.number}}</p>
+                                <p>Patient: {{ data.patient.firstname }} {{data.patient.lastname}}</p>
+                                <p>Patient Email: {{ data.patient.email }}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                {% if day.0.status == True or day.0.status == False %}
+                    {% for data in day %}
                     <div class="day appointment_booked">
                         <div class="day_date">
-                            <h3>{{day.0}}</h3>
+                            <h3>{{data.date|date:"m-d-Y"}}</h3>
                         </div>
                         <hr>
                         <div class="appointment">
@@ -41,19 +67,22 @@
                             <p>Patient Email: {{ data.patient.email }}</p>
                         </div>
                     </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="day">
+                        <div class="day_date">
+                            <h3>{{day.0}}</h3>
+                        </div>
+                        <div class="appointment_data">
+                            <p>No appointment today</p>
+                        </div>
+                    </div>
                 {% endif %}
-            {% endfor %}
-        {% else %}
-            <div class="day">
-                <div class="day_date">
-                    <h3>{{day.0}}</h3>
-                </div>
-                <div class="appointment_data">
-                    <p>No appointment today</p>
-                </div>
-            </div>
-        {% endif %}
-    {% endfor %}
+            {% endif %}
+        {% endfor %}
+    {% else %}
+    <h1 style="text-align: center;">No results</h1>
+    {% endif %}
     </div>
     <hr>
     <div class="upper_container">

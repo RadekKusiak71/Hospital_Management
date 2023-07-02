@@ -1,0 +1,51 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}Messages{% endblock %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'main/css/messages.css' %}">
+{% endblock %}
+{% block content %}
+<div class="messages_container">
+    <div class="messages">
+        <div class="messages_title">
+            <h2>Messages Recived</h2>
+        </div>
+
+        <div class="messages_list">
+            {% if recived %}
+                {% for rmessage in recived %}
+                    <div class="message">
+                        {% if rmessage.readed %}
+                        <a href="{% url 'doctor_message' rmessage.id %}" style="font-weight: 400;"><span>{{rmessage.created_at}}</span> - Title: {{rmessage.title}} ,  sended by {{rmessage.sender}} - Readed</a><br>
+                        {% else %}
+                        <a href="{% url 'doctor_message' rmessage.id %}" style="font-weight: bold;"><span>{{rmessage.created_at}}</span> - Title: {{rmessage.title}} ,  sended by {{rmessage.sender}} - Unreaded</a><br>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <h2 style="margin-top: 1rem;text-align: center;">Your recived messages box is empty</h2>
+            {% endif %}
+        </div>
+    </div>
+    <div class="messages">
+        <div class="messages_title">
+            <h2>Messages Sent</h2>
+        </div>
+        <div class="messages_list">
+            {% if sended %}
+            {% for smessage in sended %}
+                <div class="message">
+                    {% if smessage.readed %}
+                    <a href="{% url 'doctor_message' smessage.id %}" style="font-weight: 400;"><span>{{smessage.created_at}}</span> - Title: {{smessage.title}} ,  sended by {{smessage.reciver}} - Readed</a><br>
+                    {% else %}
+                    <a href="{% url 'doctor_message' smessage.id %}" style="font-weight: bold;"><span>{{smessage.created_at}}</span> - Title: {{smessage.title}} ,  sended by {{smessage.reciver}} - Unreaded</a><br>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <h2 style="margin-top: 1rem;text-align: center;">Your sended messages box is empty</h2>
+        {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
