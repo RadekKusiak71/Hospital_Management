@@ -61,17 +61,6 @@ class PerscriptionItems(models.Model):
     def __str__(self) -> str:
         return f'Perscription number: {self.perscription.id}'
     
-class Meeting(models.Model):
-    date = models.DateTimeField()
-    title = models.CharField(max_length=200)
-    doctors = models.ManyToManyField(Doctor,related_name='participants')
-    created_by = models.ForeignKey(Doctor,on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    room = models.ForeignKey('Room',on_delete=models.CASCADE,null=True)
-
-    def __str__(self) -> str:
-        return f'Meeting at {self.date} in {self.room.number} about {self.title}'
-    
 class Room(models.Model):
     number = models.IntegerField(validators=[
             MaxValueValidator(200),
