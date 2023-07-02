@@ -37,5 +37,12 @@
       - patient_site = handling a application for patients where they can check their appointments, perscriptions etc.
   - Class-based View project
   - Database overview: https://drawsql.app/teams/hospital-2/diagrams/doctors
+
+## Little overview how main pages looks:
+### Staff home page:
+![staff_page_image](https://github.com/RadekKusiak71/Hospital_Management/assets/121208184/ebc34839-6ffd-43ee-acb1-9a787af45a5e)
+### Patient home page:
+![patient_home_page](https://github.com/RadekKusiak71/Hospital_Management/assets/121208184/713d55b9-2910-47cf-9613-2930ac91976d)
+
         
 
