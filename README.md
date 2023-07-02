@@ -2,8 +2,8 @@
 ## Technologies used:
   - Django
   - Python
-  - Html
-  - Css
+  - HTML
+  - CSS
   - Bootstrap ( not really using it so often in this project )
   - Django Rest Framework
   - PostgreSQL ( after i'll end whole application i'll connect it to PostgreSQL )
