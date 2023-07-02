@@ -10,7 +10,7 @@ from django.contrib.auth import logout,login,authenticate
 from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
 
-from main.models import Patient,Doctor,Apointment,Medicine,Perscription,Meeting,Room,Message,PerscriptionItems
+from main.models import Patient,Doctor,Appointment,Medicine,Perscription,Meeting,Room,Message,PerscriptionItems
 from .forms import MessageForm,DoctorRegisterForm,DoctorUserLoginForm
 
 method_decorator(staff_member_required,name='dispatch')
@@ -20,12 +20,12 @@ class DashboardPage(View):
             doctor = Doctor.objects.get(user=request.user)
             form = MessageForm()
 
-            apointments = Apointment.objects.filter(doctor=doctor).order_by('date')
-            apointments_list = self.check_dates(apointments)
+            appointments = Appointment.objects.filter(doctor=doctor).order_by('date')
+            appointments_list = self.check_dates(appointments)
 
             meetings = Meeting.objects.filter(doctors=doctor).order_by('date')
             meetings_list = self.check_dates(meetings)
-            context = {'apointments':apointments_list,
+            context = {'appointments':appointments_list,
                     'message_form':form,
                     'meetings':meetings_list,
                     }
@@ -50,12 +50,12 @@ class DashboardPage(View):
 
     def post_delete_appointment(self):
         appointment_id = self.request.POST.get('delete')
-        Apointment.objects.get(id=appointment_id).delete()
+        Appointment.objects.get(id=appointment_id).delete()
         return redirect('dashboard')
     
     def post_confirm_appointment(self):
         appointment_id = self.request.POST.get('confirm')
-        appointment = Apointment.objects.get(id=appointment_id)
+        appointment = Appointment.objects.get(id=appointment_id)
         appointment.status = True
         appointment.save()
         return redirect('dashboard')
@@ -111,7 +111,7 @@ class CalendarPage(View):
                 days = self.get_days(calendar)
                 patients = self.search_query()
                 appointments = self.search_appointments(patients)
-                days_list = [[apointment] for apointment in appointments]
+                days_list = [[appointment] for appointment in appointments]
             
             context = {'calendar': calendar, 'days': days_list,'today_date':day,'appointments':appointments}
             return render(request, 'main/doctor_calendar.html', context)
@@ -140,7 +140,7 @@ class CalendarPage(View):
     
     def get_user_appointments(self):
         doctor = Doctor.objects.get(user=self.request.user)
-        appointments = Apointment.objects.filter(doctor=doctor).order_by('date')
+        appointments = Appointment.objects.filter(doctor=doctor).order_by('date')
         return appointments
     
     def get_month(self,today):
@@ -164,7 +164,7 @@ class CalendarPage(View):
     def search_appointments(self,patients):
         appointment_list = []
         for person in patients:
-            appointments = Apointment.objects.filter(patient = person).order_by('date')
+            appointments = Appointment.objects.filter(patient = person).order_by('date')
             for appointment in appointments:
                 appointment_list.append(appointment)
         return appointment_list
@@ -198,7 +198,7 @@ class MessagePage(View):
             return self.delete_msg(msg_id)
 
     def delete_msg(self,msg_id):
-        message = Message.objects.get(id=msg_id).delete()
+        Message.objects.get(id=msg_id).delete()
         return redirect('doctor_messages')
     
     def change_status(self, msg_id):
@@ -326,7 +326,6 @@ class DoctorRegisterPage(View):
                 firstname=user.first_name,
                 lastname=user.last_name,
                 email=user.email,
-                phone_number='000000000'
             )
             return redirect(success_url)
         else:

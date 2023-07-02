@@ -9,7 +9,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login,logout,authenticate
 
-from main.models import Patient,Apointment,Perscription
+from main.models import Patient,Appointment,Perscription
 from .forms import RegisterForm,UserLoginForm
 
 class HomePage(View):
@@ -26,10 +26,10 @@ class HomePageLogged(View):
             patient = Patient.objects.get(user=request.user)
         else:
             return redirect('home_page')
-        apointments = Apointment.objects.filter(patient=patient).order_by('date')
-        if apointments is None:
-            apointments_list = self.check_dates(apointments)
-            context = {'apointment':apointments_list[0],'patient':patient}
+        appointments = Appointment.objects.filter(patient=patient).order_by('date')
+        if appointments is None:
+            appointments_list = self.check_dates(appointments)
+            context = {'appointment':appointments_list[0],'patient':patient}
         else:
             apointments_list = []
             context = {'apointment':apointments_list,'patient':patient}
@@ -37,17 +37,17 @@ class HomePageLogged(View):
     
     def post(self,request):
         if 'delete' in request.POST:
-            Apointment.objects.get(id=request.POST.get('delete')).delete()
+            Appointment.objects.get(id=request.POST.get('delete')).delete()
         return redirect('home_page_logged')
 
     def check_dates(self, objects):
         today = timezone.now()
         obj_list = []
-        for apointment in objects:
-            if apointment.date > today:
-                obj_list.append(apointment)
+        for appointment in objects:
+            if appointment.date > today:
+                obj_list.append(appointment)
             else:
-                apointment.delete()
+                appointment.delete()
         return obj_list
     
 method_decorator(login_required(redirect_field_name='home_page'))
@@ -70,7 +70,7 @@ class AppointmentsPage(View):
     
     def get_user_appointments(self):
         patient = Patient.objects.get(user=self.request.user)
-        appointments = Apointment.objects.filter(patient=patient)
+        appointments = Appointment.objects.filter(patient=patient)
         return appointments
 
 method_decorator(login_required(redirect_field_name='home_page'))
@@ -127,7 +127,6 @@ class RegisterPage(View):
                 firstname=user.first_name,
                 lastname=user.last_name,
                 email=user.email,
-                phone_number='000000000'
             )
             return redirect(success_url)
         else:

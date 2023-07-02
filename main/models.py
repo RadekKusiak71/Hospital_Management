@@ -8,7 +8,6 @@ class Patient(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     firstname = models.CharField(max_length=200)
     lastname = models.CharField(max_length=200)
-    phone_number = models.CharField(max_length=9)
     email = models.EmailField()
 
     def __str__(self):
@@ -18,13 +17,12 @@ class Doctor(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     firstname = models.CharField(max_length=200)
     lastname = models.CharField(max_length=200)
-    phone_number = models.CharField(max_length=9)
     email = models.EmailField()
 
     def __str__(self):
         return f"{self.firstname} {self.lastname}"
     
-class Apointment(models.Model):
+class Appointment(models.Model):
     patient = models.ForeignKey(Patient,on_delete=models.CASCADE)
     doctor = models.ForeignKey(Doctor,on_delete=models.CASCADE)
     date = models.DateTimeField()
@@ -34,9 +32,9 @@ class Apointment(models.Model):
 
     def __str__(self) -> str:
         if self.status:
-            return f'Apointment Confirmed for {self.patient.firstname} {self.patient.lastname} - doctor {self.doctor.firstname} {self.doctor.lastname} in {self.room.number} - {self.date}'
+            return f'Appointment Confirmed for {self.patient.firstname} {self.patient.lastname} - doctor {self.doctor.firstname} {self.doctor.lastname} in {self.room.number} - {self.date}'
         else:
-            return f'Apointment Unconfirmed for {self.patient.firstname} {self.patient.lastname} - doctor {self.doctor.firstname} {self.doctor.lastname} in {self.room.number} - {self.date}'
+            return f'Appointment Unconfirmed for {self.patient.firstname} {self.patient.lastname} - doctor {self.doctor.firstname} {self.doctor.lastname} in {self.room.number} - {self.date}'
 
 class Medicine(models.Model):
     name = models.CharField(max_length=100)

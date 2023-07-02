@@ -3,7 +3,7 @@ from django.forms import ModelForm,TextInput, EmailInput
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm, UsernameField
-from main.models import Patient,Doctor,Apointment,Medicine,Perscription,Meeting,Room,Message
+from main.models import Patient,Doctor,Appointment,Medicine,Perscription,Meeting,Room,Message
 
 
 class MessageForm(ModelForm):

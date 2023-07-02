@@ -11,17 +11,17 @@
             </div>
             <hr>
             <div class="apointments">
-                {% for apointment in apointments %}
+                {% for appointment in appointments %}
                 <div class="apointment">
                     <h3>Patient ID: {{apointment.patient.id}}</h3>
                     <hr>
                     <h4>Patient Full Name:</h4>
-                    <div class="patient"><p>{{apointment.patient.firstname}} {{apointment.patient.lastname}}</p></div>
-                    <h4>Room: {{apointment.room}}</h4>
-                    <h4 style="margin-top:1rem;">Apointment Date:</h4>
-                    <div class="date"><p>{{apointment.date}}</p></div>
-                    <h4>Apointment Status:</h4>
-                    <div class="status">{% if apointment.status%} <p>Confirmed</p> {% else %} <p>Unconfirmed</p> {% endif %}</div>
+                    <div class="patient"><p>{{appointment.patient.firstname}} {{appointment.patient.lastname}}</p></div>
+                    <h4>Room: {{appointment.room}}</h4>
+                    <h4 style="margin-top:1rem;">Appointment Date:</h4>
+                    <div class="date"><p>{{appointment.date}}</p></div>
+                    <h4>Appointment Status:</h4>
+                    <div class="status">{% if appointment.status%} <p>Confirmed</p> {% else %} <p>Unconfirmed</p> {% endif %}</div>
                     <div class="buttons">
                         <form action="" method="POST">
                             {% csrf_token %}
