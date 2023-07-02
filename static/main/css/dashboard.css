@@ -18,7 +18,7 @@
 
 /* LEFT SIDE */
 .dashboard_left_cont{
-    min-width: 70%;
+    min-width: 100%;
     width: fit-content;
     min-height: 100vh;
     height: fit-content;
