@@ -5,7 +5,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator, MinLeng
 
     
 class Patient(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     firstname = models.CharField(max_length=200)
     lastname = models.CharField(max_length=200)
     phone_number = models.CharField(max_length=9)
