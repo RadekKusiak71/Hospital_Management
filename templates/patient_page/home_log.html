@@ -9,43 +9,45 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="300" height="300" fill="currentColor" class="bi bi-person-square" viewBox="0 0 16 16">
                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                 <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12z"/>
-              </svg>
+            </svg>
         </div>
         <div class="profile_description">
-            <h1>Patien ID : {{patient.id}}</h1>
+            <h1>Patien ID: {{patient.id}}</h1>
             <hr>
-            <h1>Name: {{patient.firstname}} {{patient.lastname}}</h1>
+            <h1>First name: {{patient.firstname}}</h1>
+            <h1>Last name: {{patient.lastname}}</h1>
             <h1>Email: {{patient.email}}</h1>
         </div>
-    </div>
-    <div class="appointments">
-        <div class="appointments_title">
-            <h1>Your upcoming appointment</h1>
-        </div>
-        <hr>
-        {% if apointment %}
-                <div class="apointment">
+        <div class="appointments" style="margin-top: 3rem;">
+            <div class="appointments_title">
+                <h1>Your upcoming appointment</h1>
+            </div>
+            <hr>
+            {% if appointment %}
+                <div class="appointment">
                     <hr>
                     <h4>Patient Full Name:</h4>
-                    <div class="patient"><p>{{apointment.patient.firstname}} {{apointment.patient.lastname}}</p></div>
-                    <h4>Room: {{apointment.room.number}}</h4>
-                    <h4 style="margin-top:1rem;">Apointment Date:</h4>
-                    <div class="date"><p>{{apointment.date}}</p></div>
-                    <h4>Apointment Status:</h4>
-                    <div class="status">{% if apointment.status%} <p>Confirmed</p> {% else %} <p>Unconfirmed</p> {% endif %}</div>
+                    <div class="patient"><p>{{appointment.patient.firstname}} {{appointment.patient.lastname}}</p></div>
+                    <h4>Room: {{appointment.room.number}}</h4>
+                    <h4 style="margin-top: 1rem;">Appointment Date:</h4>
+                    <div class="date"><p>{{appointment.date}}</p></div>
+                    <h4>Appointment Status:</h4>
+                    <div class="status">{% if appointment.status %} <p>Confirmed</p> {% else %} <p>Unconfirmed</p> {% endif %}</div>
                     <div class="buttons">
-                        {% if apointment.status == False %}
+                        {% if appointment.status == False %}
                         <form action="" method="POST">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-danger" name="delete" id=delete value="{{apointment.id}}">Delete</button>
+                            <button type="submit" class="btn btn-danger" name="delete" id=delete value="{{appointment.id}}">Delete</button>
                         </form>
                         {% endif %}
                     </div>
                 </div>
                 <hr>
-        {% else %}
-        <h3 style="margin-top: 2rem;text-align: center;">No appointment found</h3>
-        {% endif %}
+            {% else %}
+                <h3 style="margin-top: 2rem; text-align: center;">No appointment found</h3>
+            {% endif %}
+        </div>
     </div>
 </div>
+
 {% endblock %}
