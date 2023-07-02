@@ -1,0 +1,61 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %} Appointments Creator {% endblock %}
+{% block css %} 
+<link rel="stylesheet" href="{% static 'main/css/create_appointment.css' %}">
+<link rel="stylesheet" href="{% static 'main/css/perscription_doctor.css' %}">
+ {% endblock %}
+{% block content %}
+<div class="perscriptions_container">
+    <div class="upper_perscription_container">
+        <form action="" method="get">
+            {% csrf_token %}
+            <div class="search-box">
+                <button class="btn-search" name='firstname'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                      </svg>
+                </button>
+                <input type="text" class="input-search" name='firstname' placeholder="Search by firstname...">
+              </div>
+        </form>
+        <form action="" method="get">
+            <button class="btn btn-secondary">Clear Query</button>
+        </form>
+        <form action="" method="get">
+            {% csrf_token %}
+            <div class="search-box">
+                <button class="btn-search">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                      </svg>
+                </button>
+                <input type="text" class="input-search" name='lastname' placeholder="Search by lastname...">
+              </div>
+        </form>
+    </div>
+    <div class="new_patient">
+        <a href="{% url 'doctor_patient_create'  %}" class="btn btn-secondary">New Patient</a>
+    </div>
+    <div class="perscription_patients">
+        {% if patients %}
+            {% for patient in patients %}
+                <div class="patient_card">
+                    <div class="patient_img">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="180" height="200" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                        </svg>
+                    </div>
+                    <h3 style="margin-top: 1rem; text-align: center;">{{ patient.firstname }} {{ patient.lastname }}</h3>
+                    <p style="text-align: center;">Patient ID: {{ patient.id }}</p>
+                    <p style="text-align: center;">Email: {{ patient.email }}</p>
+                    <a href="{% url 'doctor_appointments_create' patient.id %}" class="btn btn-secondary" style="width: 100%;">Create Appointment</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h1>No Results</h1>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

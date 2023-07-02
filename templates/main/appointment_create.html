@@ -1,0 +1,47 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %} Appointments Creator {% endblock %}
+{% block css %} 
+<link rel="stylesheet" href="{% static 'main/css/create_appointment.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="appointment_container">
+        <div class="date">
+            <h1 style="margin-top: 0.5rem;">Date: {{today}}</h1>
+            <form action="" method="GET">
+                <button class="btn btn-secondary" type="submit" name="last_day">Previous day</button>
+            </form>
+            <form action="" method="GET">
+                <button class="btn btn-secondary" type="submit" style="margin-top: 1rem;" name="next_day">Next day</button>
+            </form>
+        </div>
+        <hr>
+        <div class="search_box">
+            <form action="" method="GET">
+                <input type="date"class="form-control" name='date' placeholder="Room availibility. Input date.">
+                <button class="btn btn-secondary">Check date</button>
+            </form>
+        </div>
+        <hr>
+        <div class="rooms">
+            {% for room in rooms %}
+                <div class="room">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <p style="text-align: center; font-size: 25px;">Room {{room}}</p>
+                        <input type="date" name="date" class="form-control">
+                        <input type="time" name="time" class="form-control" style="margin-top: 5px;">
+                        <button class="btn btn-secondary" name="room" value="{{room.id}}">Create Appointment</button>
+                    </form>
+                </div>
+            {%endfor%}
+        </div>
+    </div>
+{% endblock %} 
+
+
+<!-- 
+    1. Wybiera date: według tego wyswietlaja sie wolne pokoje
+    2. Wybiera wolny pokoj i sie tworzy appointment
+ -->

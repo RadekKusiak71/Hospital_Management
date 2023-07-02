@@ -155,3 +155,17 @@
   min-height: 15rem;
   height: fit-content;
 }
+
+/* APPOINTMENT CREATE PAGE */
+
+.new_patient{
+  width: 100%;
+  padding: 20px;
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.new_patient a {
+  width: 20%;
+}

@@ -25,8 +25,10 @@
                     <div class="buttons">
                         <form action="" method="POST">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-success" name="confirm" id="confirm" value="{{apointment.id}}">Confirm</button>
-                            <button type="submit" class="btn btn-danger" name="delete" id=delete value="{{apointment.id}}">Delete</button>
+                            {% if appointment.status == False %}
+                            <button type="submit" class="btn btn-success" name="confirm" id="confirm" value="{{appointment.id}}">Confirm</button>
+                            {% endif %}
+                            <button type="submit" class="btn btn-danger" name="delete" id=delete value="{{appointment.id}}">Delete</button>
                         </form>
                     </div>
                 </div>
@@ -47,24 +49,6 @@
             </div>
         </div>
     </div>
-    <div class="dashboard_right_cont">
-        <div class="title">
-            <h1 style="font-weight: bolder;">Your meetings</h1>
-        </div>
-        <hr>
-        <div class="meeting_container">
-            {% for meeting in meetings %}
-            <div class="meeting">
-                <h3>{{meeting.title}}</h3>
-                <hr>
-                <h4>Date</h4>
-                <p>{{meeting.date}}</p>
-                <h4>Created by</h4>
-                <p>{{meeting.created_by.firstname}} {{meeting.created_by.lastname}}</p>
-                <h4>Room: {{meeting.room.number}}</h4>
-            </div>
-            {% endfor %}
-        </div>
     </div>
 </div>
 {% endblock %}
