@@ -6,7 +6,6 @@
   - HTML
   - CSS
   - Bootstrap ( not really using it so often in this project )
-  - Django Rest Framework
 ## Instalation:
   - Clone repository
   - Create virtual environment
